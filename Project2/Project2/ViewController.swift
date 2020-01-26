@@ -11,10 +11,21 @@ class ViewController: UIViewController {
     var correctAnswer = 0
     var questionsAsked = 0
     var totalQuestionsAsked = 3
+    var highScore = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let defaults = UserDefaults.standard
+        if let savedHighScore = defaults.object(forKey: "HighScore") as? Data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                highScore = try jsonDecoder.decode(Int.self, from: savedHighScore)
+            } catch {
+                print("errrroooorr")
+            }
+        }
+        
         countries += ["estonia","france","germany","ireland","italy","monaco","nigeria",
         "poland","russia","spain","uk","us"]
         
@@ -66,6 +77,12 @@ class ViewController: UIViewController {
         }
         
         if questionsAsked == totalQuestionsAsked {
+            
+            if score > highScore {
+                highScore = score
+                save()
+            }
+            
             let finalAlertController = UIAlertController(title: alertTitle, message: "You have" +
                 " reached the final frontier of \(totalQuestionsAsked) questions asked. " +
                 "Your score is \(score)", preferredStyle: .alert)
@@ -86,11 +103,21 @@ class ViewController: UIViewController {
     }
     
     @objc func getScore(){
-        let alertController = UIAlertController(title: "SCORE", message: "\(score)", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "SCORE", message: "\(score) and high score is \(highScore)", preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "SCORE", style: .default, handler: nil)
         alertController.addAction(alertAction)
         
         present(alertController,animated: true)
     }
    
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        if let savedData = try? jsonEncoder.encode(highScore) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "HighScore")
+        } else {
+            print("We failed to save the high score")
+        }
+    }
+    
 }
