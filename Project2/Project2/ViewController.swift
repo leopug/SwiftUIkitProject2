@@ -58,6 +58,10 @@ class ViewController: UIViewController {
         var alertTitle: String
         var finalAlertTitle: String
         
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 4, options: [], animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        })
+        
         if sender.tag == correctAnswer {
             alertTitle = "Correct"
             score += 1
@@ -99,6 +103,10 @@ class ViewController: UIViewController {
         }
         
         title = "\(countries[correctAnswer].uppercased()) - Score: \(score)"
+        
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 4, options: [], animations: {
+            sender.transform = .identity
+         })
         
     }
     
